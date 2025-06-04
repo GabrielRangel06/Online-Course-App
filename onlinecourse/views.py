@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-# <HINT> Import any new Models here
 from .models import Course, Enrollment, Question, Choice, Submission
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
@@ -8,9 +7,9 @@ from django.urls import reverse
 from django.views import generic
 from django.contrib.auth import login, logout, authenticate
 import logging
-# Get an instance of a logger
+
 logger = logging.getLogger(__name__)
-# Create your views here.
+
 
 
 def registration_request(request):
@@ -18,7 +17,6 @@ def registration_request(request):
     if request.method == 'GET':
         return render(request, 'onlinecourse/user_registration_bootstrap.html', context)
     elif request.method == 'POST':
-        # Check if user exists
         username = request.POST['username']
         password = request.POST['psw']
         first_name = request.POST['firstname']
@@ -63,7 +61,6 @@ def logout_request(request):
 def check_if_enrolled(user, course):
     is_enrolled = False
     if user.id is not None:
-        # Check if user enrolled
         num_results = Enrollment.objects.filter(user=user, course=course).count()
         if num_results > 0:
             is_enrolled = True
@@ -95,7 +92,6 @@ def enroll(request, course_id):
 
     is_enrolled = check_if_enrolled(user, course)
     if not is_enrolled and user.is_authenticated:
-        # Create an enrollment
         Enrollment.objects.create(user=user, course=course, mode='honor')
         course.total_enrollment += 1
         course.save()
